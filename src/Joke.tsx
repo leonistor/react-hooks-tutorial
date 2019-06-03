@@ -7,24 +7,30 @@ interface IJoke {
   punchline: string
 }
 
+function useFetch<T>(url: RequestInfo, initialValue: T): T {
+  const [result, setResult] = useState(initialValue)
+
+  useEffect(() => {
+    fetch(url)
+      .then(response => response.json())
+      .then(json => setResult(json))
+  }, [])
+
+  return result
+}
+
 const Joke = () => {
-  const [joke, setJoke] = useState<IJoke>({
+  const initJoke = {
     id: undefined,
     type: 'empty',
     setup: 'fetching',
     punchline: '...'
-  })
+  }
 
-  useEffect(() => {
-    fetch('https://official-joke-api.appspot.com/random_joke')
-      .then(response => response.json())
-      .then(json => {
-        // console.log(json)
-        setJoke(json)
-      })
-  }, [])
-
-  const { setup, punchline } = joke
+  const { setup, punchline } = useFetch(
+    'https://official-joke-api.appspot.com/random_joke',
+    initJoke
+  )
 
   return (
     <div>
