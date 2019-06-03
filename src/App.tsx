@@ -1,0 +1,47 @@
+import React, {
+  useState,
+  KeyboardEventHandler,
+  ChangeEventHandler
+} from 'react'
+import './Joke'
+import Joke from './Joke'
+import NewsStories from './NewsStories'
+
+function App(): JSX.Element {
+  const [userQuery, setUserQuery] = useState<string>('')
+
+  const updateUserQuery: ChangeEventHandler<HTMLInputElement> = event => {
+    console.log(userQuery)
+    setUserQuery(event.currentTarget.value)
+  }
+
+  const searchQuery = () => {
+    window.open(`https://google.com/search?q=${userQuery}`, '_blank')
+  }
+
+  const handleKeyPress: KeyboardEventHandler = event => {
+    if (event.key === 'Enter') {
+      searchQuery()
+    }
+  }
+
+  return (
+    <div className="App">
+      <h1>Hello, Nutzi!</h1>
+      <div className="form">
+        <input
+          value={userQuery}
+          onChange={updateUserQuery}
+          onKeyPress={e => handleKeyPress(e)}
+        />
+        <button onClick={searchQuery}>Search</button>
+      </div>
+      <hr />
+      <Joke />
+      <hr />
+      <NewsStories />
+    </div>
+  )
+}
+
+export default App
