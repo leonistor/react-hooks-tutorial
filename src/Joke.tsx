@@ -1,22 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
+import { useFetch } from './hooks'
 
 interface IJoke {
   id?: number
   type: string
   setup: string
   punchline: string
-}
-
-function useFetch<T>(url: RequestInfo, initialValue: T): T {
-  const [result, setResult] = useState(initialValue)
-
-  useEffect(() => {
-    fetch(url)
-      .then(response => response.json())
-      .then(json => setResult(json))
-  }, [])
-
-  return result
 }
 
 const Joke = () => {

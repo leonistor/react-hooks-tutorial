@@ -1,6 +1,7 @@
-import React, { useEffect, useState, Fragment } from 'react'
+import React, { Fragment } from 'react'
+import { useFetch } from './hooks'
 
-interface INewsStories {
+interface IStories {
   by: string
   id: number
   title: string
@@ -8,17 +9,11 @@ interface INewsStories {
   time: number
 }
 
-const NewsStories = () => {
-  const [stories, setStories] = useState<INewsStories[]>([])
-
-  useEffect(() => {
-    fetch('https://news-proxy-server.appspot.com/topstories')
-      .then(response => response.json())
-      .then(json => {
-        // console.log(json)
-        setStories(json)
-      })
-  }, [])
+const Stories = () => {
+  const stories = useFetch<IStories[]>(
+    'https://news-proxy-server.appspot.com/topstories',
+    []
+  )
 
   return (
     <Fragment>
@@ -45,4 +40,4 @@ const NewsStories = () => {
   )
 }
 
-export default NewsStories
+export default Stories

@@ -5,7 +5,7 @@ import React, {
 } from 'react'
 import './Joke'
 import Joke from './Joke'
-import NewsStories from './NewsStories'
+import Stories from './Stories'
 
 function App(): JSX.Element {
   const [userQuery, setUserQuery] = useState<string>('')
@@ -39,7 +39,7 @@ function App(): JSX.Element {
       <hr />
       <Joke />
       <hr />
-      <NewsStories />
+      <Stories />
     </div>
   )
 }
