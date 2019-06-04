@@ -7,6 +7,7 @@ import './Joke'
 import Joke from './Joke'
 import Stories from './Stories'
 import Tasks from './Tasks'
+import Gallery from './Gallery'
 
 function App(): JSX.Element {
   const [userQuery, setUserQuery] = useState<string>('')
@@ -40,11 +41,13 @@ function App(): JSX.Element {
         {/* {userQuery} */}
       </div>
       <hr />
-      <Joke />
+      {/* <Joke /> */}
       <hr />
       <Tasks />
       <hr />
-      <Stories />
+      <Gallery />
+      <hr />
+      {/* <Stories /> */}
     </div>
   )
 }
