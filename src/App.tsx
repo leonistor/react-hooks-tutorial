@@ -11,8 +11,9 @@ function App(): JSX.Element {
   const [userQuery, setUserQuery] = useState<string>('')
 
   const updateUserQuery: ChangeEventHandler<HTMLInputElement> = event => {
-    console.log(userQuery)
+    // console.log(userQuery)
     setUserQuery(event.currentTarget.value)
+    console.log(userQuery)
   }
 
   const searchQuery = () => {
@@ -35,6 +36,7 @@ function App(): JSX.Element {
           onKeyPress={e => handleKeyPress(e)}
         />
         <button onClick={searchQuery}>Search</button>
+        {/* {userQuery} */}
       </div>
       <hr />
       <Joke />
