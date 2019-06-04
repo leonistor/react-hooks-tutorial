@@ -11,6 +11,7 @@ import Gallery from './Gallery'
 
 function App(): JSX.Element {
   const [userQuery, setUserQuery] = useState<string>('')
+  const [showGallery, setShowGallery] = useState(true)
 
   const updateUserQuery: ChangeEventHandler<HTMLInputElement> = event => {
     // console.log(userQuery)
@@ -26,6 +27,10 @@ function App(): JSX.Element {
     if (event.key === 'Enter') {
       searchQuery()
     }
+  }
+
+  const toggleShowGallery = () => {
+    setShowGallery(!showGallery)
   }
 
   return (
@@ -45,7 +50,12 @@ function App(): JSX.Element {
       <hr />
       <Tasks />
       <hr />
-      <Gallery />
+      <div>
+        {showGallery ? <Gallery /> : null}
+        <button onClick={toggleShowGallery}>
+          {showGallery ? 'Hide' : 'Show'} Gallery
+        </button>
+      </div>
       <hr />
       {/* <Stories /> */}
     </div>

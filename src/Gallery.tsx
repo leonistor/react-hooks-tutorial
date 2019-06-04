@@ -5,11 +5,16 @@ function Gallery() {
   const [index, setIndex] = useState(0)
 
   useEffect(() => {
-    setInterval(() => {
+    const interval = setInterval(() => {
       setIndex(storedIndex => {
         return (storedIndex + 1) % PICTURES.length
       })
     }, 2000)
+
+    // cleanup callback for effect
+    return () => {
+      clearInterval(interval)
+    }
   }, [])
 
   // console.log('index', index)
