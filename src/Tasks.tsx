@@ -1,4 +1,4 @@
-import React, { useState, ChangeEventHandler } from 'react'
+import React, { useState, useEffect, ChangeEventHandler } from 'react'
 import { v4 as uuid } from 'uuid'
 
 interface ITask {
@@ -6,10 +6,32 @@ interface ITask {
   taskText: string
 }
 
+interface IStoreTasks {
+  tasks: ITask[]
+  completedTasks: ITask[]
+}
+
+const TASKS_STORAGE_KEY = 'TASKS_STORAGE_KEY'
+
+const storeTasks = (taskMap: IStoreTasks) =>
+  localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(taskMap))
+
+const readStoredTasks = (): IStoreTasks => {
+  let taskMap = localStorage.getItem(TASKS_STORAGE_KEY)
+  return taskMap ? JSON.parse(taskMap) : { tasks: [], completedTasks: [] }
+}
+
 function Tasks() {
   const [taskText, setTaskText] = useState<string>('')
-  const [tasks, setTasks] = useState<ITask[]>([])
-  const [completedTasks, setCompletedTasks] = useState<ITask[]>([])
+  var storedTasks: IStoreTasks = readStoredTasks()
+  const [tasks, setTasks] = useState<ITask[]>(storedTasks.tasks)
+  const [completedTasks, setCompletedTasks] = useState<ITask[]>(
+    storedTasks.completedTasks
+  )
+
+  useEffect(() => {
+    storeTasks({ tasks, completedTasks })
+  })
 
   const updateTaskText: ChangeEventHandler<HTMLInputElement> = event => {
     setTaskText(event.target.value)
@@ -29,8 +51,8 @@ function Tasks() {
     setCompletedTasks(completedTasks.filter(t => t.id !== task.id))
   }
 
-  console.log('tasks', tasks)
-  console.log('completed tasks', completedTasks)
+  // console.log('tasks', tasks)
+  // console.log('completed tasks', completedTasks)
 
   return (
     <div>
