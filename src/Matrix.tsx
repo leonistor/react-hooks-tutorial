@@ -1,21 +1,17 @@
-import React, { useState, useEffect, ChangeEventHandler } from 'react'
+import React, { useState, ChangeEventHandler } from 'react'
 import MATRIX from './data/matrix'
+import { useDynamicTransition } from './hooks'
 
 const minDelay = 100
 
 function Matrix() {
-  const [index, setIndex] = useState(0)
   const [delay, setDelay] = useState(minDelay)
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIndex(storedIndex => {
-        return (storedIndex + 1) % MATRIX.length
-      })
-    }, delay)
-
-    return () => clearInterval(interval)
-  }, [delay])
+  const index = useDynamicTransition({
+    delay,
+    increment: 1,
+    length: MATRIX.length
+  })
 
   const updateDelay: ChangeEventHandler<HTMLInputElement> = event => {
     const delay = Number(event.target.value)

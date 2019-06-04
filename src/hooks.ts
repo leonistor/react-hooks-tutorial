@@ -11,3 +11,27 @@ export function useFetch<T>(url: RequestInfo, initialValue: T): T {
 
   return result
 }
+
+interface IDynamicTransition {
+  increment: number
+  delay: number
+  length: number
+}
+
+export const useDynamicTransition = (args: IDynamicTransition) => {
+  let { increment, delay, length } = args
+  const [index, setIndex] = useState(0)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex(storedIndex => {
+        return (storedIndex + increment) % length
+      })
+    }, delay)
+
+    // cleanup callback for effect
+    return () => clearInterval(interval)
+  }, [delay, increment])
+
+  return index
+}

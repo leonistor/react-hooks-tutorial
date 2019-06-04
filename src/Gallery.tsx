@@ -1,27 +1,20 @@
-import React, { useState, useEffect, ChangeEventHandler } from 'react'
+import React, { useState, ChangeEventHandler } from 'react'
 import PICTURES from './data/pictures'
+import { useDynamicTransition } from './hooks'
 
 const SECONDS = 1000
 const minumDelay = 1 * SECONDS
 const minIncrement = 1
 
 function Gallery() {
-  const [index, setIndex] = useState(0)
   const [delay, setDelay] = useState(2 * SECONDS)
   const [increment, setIncrement] = useState(1)
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIndex(storedIndex => {
-        return (storedIndex + increment) % PICTURES.length
-      })
-    }, delay)
-
-    // cleanup callback for effect
-    return () => {
-      clearInterval(interval)
-    }
-  }, [delay, increment])
+  const index = useDynamicTransition({
+    delay,
+    increment,
+    length: PICTURES.length
+  })
 
   const updateDelay: ChangeEventHandler<HTMLInputElement> = event => {
     const delay = Number(event.target.value) * SECONDS
