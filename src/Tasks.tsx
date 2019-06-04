@@ -6,22 +6,10 @@ interface ITask {
   taskText: string
 }
 
-let i = 0
-
 function Tasks() {
   const [taskText, setTaskText] = useState<string>('')
-
-  let tasks: ITask[], setTasks: React.Dispatch<React.SetStateAction<ITask[]>>
-  let completedTasks: ITask[],
-    setCompletedTasks: React.Dispatch<React.SetStateAction<ITask[]>>
-
-  if (i % 2 === 0) {
-    ;[tasks, setTasks] = useState<ITask[]>([])
-    ;[completedTasks, setCompletedTasks] = useState<ITask[]>([])
-  } else {
-    ;[completedTasks, setCompletedTasks] = useState<ITask[]>([])
-    ;[tasks, setTasks] = useState<ITask[]>([])
-  }
+  const [tasks, setTasks] = useState<ITask[]>([])
+  const [completedTasks, setCompletedTasks] = useState<ITask[]>([])
 
   const updateTaskText: ChangeEventHandler<HTMLInputElement> = event => {
     setTaskText(event.target.value)
