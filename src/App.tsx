@@ -8,6 +8,7 @@ import Joke from './Joke'
 import Stories from './Stories'
 import Tasks from './Tasks'
 import Gallery from './Gallery'
+import Matrix from './Matrix'
 
 function App(): JSX.Element {
   const [userQuery, setUserQuery] = useState<string>('')
@@ -56,6 +57,8 @@ function App(): JSX.Element {
           {showGallery ? 'Hide' : 'Show'} Gallery
         </button>
       </div>
+      <hr />
+      <Matrix />
       <hr />
       {/* <Stories /> */}
     </div>
