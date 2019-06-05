@@ -1,4 +1,9 @@
-import React, { useState, useEffect, ChangeEventHandler } from 'react'
+import React, {
+  useState,
+  useEffect,
+  useReducer,
+  ChangeEventHandler
+} from 'react'
 import { v4 as uuid } from 'uuid'
 
 interface ITask {
@@ -6,28 +11,58 @@ interface ITask {
   taskText: string
 }
 
-interface IStoreTasks {
+interface IState {
   tasks: ITask[]
   completedTasks: ITask[]
 }
 
+// https://medium.com/@jrwebdev/react-hooks-in-typescript-88fce7001d0d
+type Action =
+  | { type: 'add'; newTask: ITask }
+  | { type: 'complete'; task: ITask }
+  | { type: 'delete'; taskId: string }
+
+const initialTasksState: IState = { tasks: [], completedTasks: [] }
+
+const tasksReducer = (state: IState, action: Action) => {
+  switch (action.type) {
+    case 'add':
+      return {
+        ...state,
+        tasks: [...state.tasks, action.newTask]
+      }
+    case 'complete':
+      return {
+        ...state,
+        tasks: state.tasks.filter(t => t.id !== action.task.id),
+        completedTasks: [...state.completedTasks, action.task]
+      }
+    case 'delete':
+      return {
+        ...state,
+        completedTasks: state.completedTasks.filter(t => t.id !== action.taskId)
+      }
+    default:
+      return state
+  }
+}
+
 const TASKS_STORAGE_KEY = 'TASKS_STORAGE_KEY'
 
-const storeTasks = (taskMap: IStoreTasks) =>
+const storeTasks = (taskMap: IState) =>
   localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(taskMap))
 
-const readStoredTasks = (): IStoreTasks => {
+const readStoredTasks = (): IState => {
   let taskMap = localStorage.getItem(TASKS_STORAGE_KEY)
-  return taskMap ? JSON.parse(taskMap) : { tasks: [], completedTasks: [] }
+  return taskMap ? JSON.parse(taskMap) : initialTasksState
 }
 
 function Tasks() {
   const [taskText, setTaskText] = useState<string>('')
-  var storedTasks: IStoreTasks = readStoredTasks()
-  const [tasks, setTasks] = useState<ITask[]>(storedTasks.tasks)
-  const [completedTasks, setCompletedTasks] = useState<ITask[]>(
-    storedTasks.completedTasks
-  )
+  var storedTasks: IState = readStoredTasks()
+
+  const [state, dispatch] = useReducer(tasksReducer, storedTasks)
+  const { tasks, completedTasks } = state
 
   useEffect(() => {
     storeTasks({ tasks, completedTasks })
@@ -39,20 +74,16 @@ function Tasks() {
 
   const addTask = () => {
     const newTask = { id: uuid(), taskText }
-    setTasks([...tasks, newTask])
+    dispatch({ type: 'add', newTask })
   }
 
-  const colmpleteTask = (completedTask: ITask) => () => {
-    setCompletedTasks([...completedTasks, completedTask])
-    setTasks(tasks.filter(task => task.id !== completedTask.id))
+  const completeTask = (completedTask: ITask) => () => {
+    dispatch({ type: 'complete', task: completedTask })
   }
 
   const deleteTask = (task: ITask) => () => {
-    setCompletedTasks(completedTasks.filter(t => t.id !== task.id))
+    dispatch({ type: 'delete', taskId: task.id })
   }
-
-  // console.log('tasks', tasks)
-  // console.log('completed tasks', completedTasks)
 
   return (
     <div>
@@ -65,7 +96,7 @@ function Tasks() {
         {tasks.map(task => {
           const { id, taskText } = task
           return (
-            <div key={id} onClick={colmpleteTask(task)}>
+            <div key={id} onClick={completeTask(task)}>
               {taskText}
             </div>
           )
